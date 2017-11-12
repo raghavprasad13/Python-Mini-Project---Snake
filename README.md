@@ -17,4 +17,4 @@
   1. Addition of obstacles  
   2. Keeping score  
   
-  **Keep updating the README as an when features are added**
+  **Keep updating the README as and when features are added**
