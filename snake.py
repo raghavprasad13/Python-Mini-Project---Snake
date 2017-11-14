@@ -12,6 +12,7 @@ Y_VELOCITY = 0
 global snake_speed
 global input_given  #Variable to check if the difficulty is specified(enable's /disable's the start button)
 input_given=False
+
 class Segment(object):
 	def __init__(self, x_pos, y_pos, x_vel = 0, y_vel = 0):
 		self.x_pos = x_pos
@@ -200,10 +201,10 @@ def draw_play_space(canvas):
 		snake.wall_collision()                  #WallCollision calls game_over when the condition is satisfied
 
 
-		if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
-		fruit.update_pos(random.randint(0,20)*20,random.randint(0,20)*20) #updates the position of the fruit each time the snake eats it
-		snake.addSegment()
-		# however, the fruit might appear on the snake. The condition for this will be developed soon. 
+	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
+	fruit.update_pos(random.randint(0,20)*20,random.randint(0,20)*20) #updates the position of the fruit each time the snake eats it
+	snake.addSegment()
+	# however, the fruit might appear on the snake. The condition for this will be developed soon. 
 
 
 def button_Start():
