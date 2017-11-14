@@ -2,16 +2,20 @@ import SimpleGUICS2Pygame.simpleguics2pygame as sg
 import SimpleGUICS2Pygame.simplegui_lib_draw as draw
 import pygame
 import random
+import time
 
 LENGTH = 500  # length of playing space
 HEIGHT = 500  # height of playing space
-RANDOM_POS_X = random.randint(0, 25)*20   # initial x-coordinate of head of the snake
-RANDOM_POS_Y = random.randint(0, 25)*20   # initial y-coordinate of head of the snake
+
 X_VELOCITY = 20 # the x and y velocities must be 20/-20 because of the size of the segments of the snake chosen i.e. 20*20 squares
 Y_VELOCITY = 0
+
 global snake_speed
-global input_given  #Variable to check if the difficulty is specified(enable's /disable's the start button)
-input_given=False
+
+start_button_disabled = False	# initially we will want start button to be enabled
+restart_button_disabled = True	# initially we will want the restart button to be disabled
+								# since "restarting" the game for the first time is illogical
+
 class Segment(object):
 	def __init__(self, x_pos, y_pos, x_vel = 0, y_vel = 0):
 		self.x_pos = x_pos
@@ -37,6 +41,9 @@ class Segment(object):
 
 class Snake(object):
 	def __init__(self):
+		RANDOM_POS_X = random.randint(10, 15)*20   # initial x-coordinate of head of the snake
+		RANDOM_POS_Y = random.randint(10, 15)*20   # initial y-coordinate of head of the snake
+
 		self.head = self.tail = Segment(RANDOM_POS_X, RANDOM_POS_Y, X_VELOCITY, Y_VELOCITY)
 		self.segments = []	# will store all the segments of the snake
 		self.head.ahead = self.tail.ahead = None
@@ -58,11 +65,14 @@ class Snake(object):
 		self.tail.x_vel = self.tail.ahead.x_vel 	# new segment added is initialized with velocity equal
 		self.tail.y_vel = self.tail.ahead.y_vel 	# to that of the segment directly in front of it
 	
-	def wall_collision(self):
-		global input_given
-		if(self.head.x_pos==0 or self.head.y_pos==500 or self.head.x_pos==500 or self.head.y_pos==0):
+	def collision(self):
+		global start_button_disabled
+		if(self.head.x_pos==-20 or self.head.y_pos==500 or self.head.x_pos==500 or self.head.y_pos==-20):
+			time.sleep(0.2)
 			frame.set_draw_handler(game_over)
-			input_given=False			#Used to disable the Start button but doesn't affect the Restart button
+			start_button_disabled = False			#Used to disable the Start button but doesn't affect the Restart button
+			restart_button_disabled = False
+			return
 		'''
 		if(self.head.x_pos==500):         	Incomplete looping back conditions
 			self.head.x_pos=20	
@@ -73,6 +83,14 @@ class Snake(object):
 		if(self.head.y_pos==0):
 			self.head.y_pos=500													
 		'''
+
+		# condition to check for self collision
+		for segment in self.segments:
+			if (self.head.x_pos == segment.x_pos) and (self.head.y_pos == segment.y_pos):
+				frame.set_draw_handler(game_over)
+				start_button_disabled = False
+				restart_button_disabled = False
+				return
 
 snake = Snake()
 
@@ -185,36 +203,50 @@ def draw_play_space(canvas):
 
 		clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
-		snake.wall_collision()                  #WallCollision calls game_over when the condition is satisfied
+		snake.collision()                  # WallCollision calls game_over when the condition is satisfied
 
 def button_Start():
-	global input_given					#Only works if the user inputs a difficulty
-	if(input_given):
-		snake.__init__()                             	#Reset's the object snake 
-		snake.addSegment()				#Starts off with the initial conditions
+	global start_button_disabled, snake_speed, restart_button_disabled
+
+	if not start_button_disabled:
+		snake.__init__()                             	# Resets the object snake 
+		snake.addSegment()				# Starts off with the initial conditions
 		snake.addSegment()
 		snake.addSegment()
-		snake.head.x_pos=random.randint(0, 25)*20
-		snake.head.y_pos=random.randint(0, 25)*20
+		# snake.head.x_pos=random.randint(0, 25)*20
+		# snake.head.y_pos=random.randint(0, 25)*20
+
+		try:
+			snake_speed = int(inp.get_text())*10
+		except ValueError:
+			inp.set_text("NaN")
+			return
+
+		if (int(inp.get_text()) < 0) or (int(inp.get_text()) > 10):
+			inp.set_text("Invalid")
+			return
+
+		restart_button_disabled = False
+		start_button_disabled = True
+
 		frame.set_draw_handler(draw_play_space)	
+
 def button_Restart():
-	snake.__init__()                             	#Use's the difficulty previously given 
-	snake.addSegment()				
-	snake.addSegment()
-	snake.addSegment()
-	snake.head.x_pos=random.randint(0, 25)*20
-	snake.head.y_pos=random.randint(0, 25)*20
-	frame.set_draw_handler(draw_play_space)
+	if not restart_button_disabled:
+		snake.__init__()                             	# Uses the difficulty previously given 
+		snake.addSegment()				
+		snake.addSegment()
+		snake.addSegment()
+		# snake.head.x_pos=random.randint(0, 25)*20			<-- was causing the teleportation error
+		# snake.head.y_pos=random.randint(0, 25)*20			<-- was causing the teleportation error
+		frame.set_draw_handler(draw_play_space)
 		
 def canvas_Menu(canvas):				#Temporary GameOver screen
 	canvas.draw_text('Snake Game', (140, 40), 46, 'Red')
 	canvas.draw_text('Instructions', (40, 140), 36, 'Green')		
 
 def input_handler(int_input):                         #Function to input difficulty
-	global snake_speed
-	global input_given
-	snake_speed=int(int_input)*10
-	input_given=True			#Since input is given Start button is enabled
+	pass
 
 def game_over(canvas):						#Temporary GameOver screen
 	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
@@ -222,10 +254,14 @@ def game_over(canvas):						#Temporary GameOver screen
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
 frame.set_keydown_handler(keydown_handler)
+
+inp = frame.add_input("Difficulty from 1-10", input_handler,50)       #Changes the framerate and hence the speed of the snake
+
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
 frame.set_draw_handler(canvas_Menu)		
-inp = frame.add_input("Difficulty from 1-10", input_handler,50)       #Changes the framerate and hence the speed of the snake
+
+
 frame.start()
 
 
