@@ -7,9 +7,11 @@ LENGTH = 500  # length of playing space
 HEIGHT = 500  # height of playing space
 RANDOM_POS_X = random.randint(0, 25)*20   # initial x-coordinate of head of the snake
 RANDOM_POS_Y = random.randint(0, 25)*20   # initial y-coordinate of head of the snake
-X_VELOCITY = 20  # the x and y velocities must be 20/-20 because of the size of the segments of the snake chosen i.e. 20*20 squares
+X_VELOCITY = 20 # the x and y velocities must be 20/-20 because of the size of the segments of the snake chosen i.e. 20*20 squares
 Y_VELOCITY = 0
-
+global snake_speed
+global input_given  #Variable to check if the difficulty is specified(enable's /disable's the start button)
+input_given=False
 class Segment(object):
 	def __init__(self, x_pos, y_pos, x_vel = 0, y_vel = 0):
 		self.x_pos = x_pos
@@ -55,12 +57,26 @@ class Snake(object):
 		self.segments.append(self.tail)		# note use of .append() :P
 		self.tail.x_vel = self.tail.ahead.x_vel 	# new segment added is initialized with velocity equal
 		self.tail.y_vel = self.tail.ahead.y_vel 	# to that of the segment directly in front of it
-
+	
+	def wall_collision(self):
+		global input_given
+		if(self.head.x_pos==0 or self.head.y_pos==500 or self.head.x_pos==500 or self.head.y_pos==0):
+			frame.set_draw_handler(game_over)
+			input_given=False			#Used to disable the Start button but doesn't affect the Restart button
+		'''
+		if(self.head.x_pos==500):         	Incomplete looping back conditions
+			self.head.x_pos=20	
+		if(self.head.x_pos==0):
+			self.head.x_pos=500
+		if(self.head.y_pos==500):
+			self.head.y_pos=20	
+		if(self.head.y_pos==0):
+			self.head.y_pos=500													
+		'''
 
 snake = Snake()
-snake.addSegment()
-snake.addSegment()
-snake.addSegment()
+
+
 
 clock = pygame.time.Clock()		
 ''' clock will be used to control the frame rate of the game
@@ -68,8 +84,8 @@ clock = pygame.time.Clock()
 
 
 def keydown_handler(key):
+	
 	global snake
-
 	activate_updown = True		# by default up/down controls should be active since initial direction of snake is rightward
 	activate_leftright = False	# by default left/right should be deactivated because of reason stated above
 
@@ -134,6 +150,7 @@ def keydown_handler(key):
 def draw_play_space(canvas):
 
 	global snake
+	global snake_speed
 
 	for i in range(25):		# merely draws the red grid. Temporary and for visual ref of dev only. 
 							#Not to be included in finalized project
@@ -166,18 +183,53 @@ def draw_play_space(canvas):
 
 			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Red", "Blue")
 
-		clock.tick(20)	# this is where the frame rate of the game is being controlled
+		clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
+		snake.wall_collision()                  #WallCollision calls game_over when the condition is satisfied
 
+def button_Start():
+	global input_given					#Only works if the user inputs a difficulty
+	if(input_given):
+		snake.__init__()                             	#Reset's the object snake 
+		snake.addSegment()				#Starts off with the initial conditions
+		snake.addSegment()
+		snake.addSegment()
+		snake.head.x_pos=random.randint(0, 25)*20
+		snake.head.y_pos=random.randint(0, 25)*20
+		frame.set_draw_handler(draw_play_space)	
+def button_Restart():
+	snake.__init__()                             	#Use's the difficulty previously given 
+	snake.addSegment()				
+	snake.addSegment()
+	snake.addSegment()
+	snake.head.x_pos=random.randint(0, 25)*20
+	snake.head.y_pos=random.randint(0, 25)*20
+	frame.set_draw_handler(draw_play_space)
+		
+def canvas_Menu(canvas):				#Temporary GameOver screen
+	canvas.draw_text('Snake Game', (140, 40), 46, 'Red')
+	canvas.draw_text('Instructions', (40, 140), 36, 'Green')		
 
+def input_handler(int_input):                         #Function to input difficulty
+	global snake_speed
+	global input_given
+	snake_speed=int(int_input)*10
+	input_given=True			#Since input is given Start button is enabled
+
+def game_over(canvas):						#Temporary GameOver screen
+	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
+	canvas.draw_text('Score', (140, 140), 26, 'Blue')
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
-
 frame.set_keydown_handler(keydown_handler)
-
-
-frame.set_draw_handler(draw_play_space)
-
+StartGame = frame.add_button("Start", button_Start)
+RestartGame = frame.add_button("Restart", button_Restart)
+frame.set_draw_handler(canvas_Menu)		
+inp = frame.add_input("Difficulty from 1-10", input_handler,50)       #Changes the framerate and hence the speed of the snake
 frame.start()
+
+
+
+
 
 
