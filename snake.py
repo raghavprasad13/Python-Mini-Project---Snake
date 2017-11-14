@@ -76,6 +76,18 @@ class Snake(object):
 
 snake = Snake()
 
+class Fruit(object):
+	def __init__(self,x_pos=20,y_pos=20):
+		self.x_pos=x_pos
+		self.y_pos=y_pos
+
+	def update_pos(self,x,y):                   # this updates the position of the fruit each time something wierd happens
+		self.x_pos=x
+		self.y_pos=y
+
+	
+
+fruit=Fruit()
 
 
 clock = pygame.time.Clock()		
@@ -186,6 +198,13 @@ def draw_play_space(canvas):
 		clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
 		snake.wall_collision()                  #WallCollision calls game_over when the condition is satisfied
+
+
+		if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
+		fruit.update_pos(random.randint(0,20)*20,random.randint(0,20)*20) #updates the position of the fruit each time the snake eats it
+		snake.addSegment()
+		# however, the fruit might appear on the snake. The condition for this will be developed soon. 
+
 
 def button_Start():
 	global input_given					#Only works if the user inputs a difficulty
