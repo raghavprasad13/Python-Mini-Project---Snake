@@ -222,14 +222,21 @@ def draw_play_space(canvas):
 
 	clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
+	new_pos=[i for i in range(0,400,20)]
+
+	for segment in snake.segments:                    #This ensures that the fruit doesn't appear on the snake
+		if segment.x_pos in new_pos:
+			new_pos.remove(segment.x_pos)
+		if segment.y_pos in new_pos:
+			new_pos.remove(segment.y_pos)
+		else:
+			pass
+
 	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
-		fruit.update_pos(random.randint(0,20)*20,random.randint(0,20)*20) #updates the position of the fruit each time the snake eats it
+		fruit.update_pos(random.choice(new_pos),random.choice(new_pos)) #updates the position of the fruit each time the snake eats it
 		snake.addSegment()
-		
-		# however, the fruit might appear on the snake. The condition for this will be developed soon. 
-
-
-		snake.collision()                  # WallCollision calls game_over when the condition is satisfied
+	
+	snake.collision()                  # WallCollision calls game_over when the condition is satisfied
 
 
 def button_Start():
