@@ -74,6 +74,7 @@ class Snake(object):
 			start_button_disabled = False			#Used to disable the Start button but doesn't affect the Restart button
 			restart_button_disabled = False
 			collision_sound_effect.play()
+
 			return
 		'''
 		if(self.head.x_pos==500):         	Looping back conditions for the boundary
@@ -97,6 +98,18 @@ class Snake(object):
 
 snake = Snake()
 
+class Fruit(object):
+	def __init__(self,x_pos=20,y_pos=20):
+		self.x_pos=x_pos
+		self.y_pos=y_pos
+
+	def update_pos(self,x,y):                   # this updates the position of the fruit each time something wierd happens
+		self.x_pos=x
+		self.y_pos=y
+
+	
+
+fruit=Fruit()
 
 
 clock = pygame.time.Clock()		
@@ -186,7 +199,8 @@ def draw_play_space(canvas):
 	snake.head.y_pos += snake.head.y_vel
 
 	draw.draw_rect(canvas, [snake.head.x_pos, snake.head.y_pos], [20, 20], 1, "Red", "Green")
-
+	draw.draw_rect(canvas,[fruit.x_pos,fruit.y_pos],[20,20],1,"Red","Blue")
+	
 	for segment in snake.segments:
 
 		if segment is snake.tail:
@@ -204,9 +218,19 @@ def draw_play_space(canvas):
 
 			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Red", "Blue")
 
-		clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
+		
+
+	clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
+
+	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
+		fruit.update_pos(random.randint(0,20)*20,random.randint(0,20)*20) #updates the position of the fruit each time the snake eats it
+		snake.addSegment()
+		
+		# however, the fruit might appear on the snake. The condition for this will be developed soon. 
+
 
 		snake.collision()                  # WallCollision calls game_over when the condition is satisfied
+
 
 def button_Start():
 	global start_button_disabled, snake_speed, restart_button_disabled
@@ -257,8 +281,10 @@ def game_over(canvas):						#Temporary GameOver screen
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
 frame.set_keydown_handler(keydown_handler)
+
 eating_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/7/73/Powerup.ogg')    #To be called when snake collides with an apple
 collision_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/3/3b/EnemyDeath.ogg') #To be called when snake collides with walls/itself
+
 inp = frame.add_input("Difficulty from 1-10", input_handler,50)       #Changes the framerate and hence the speed of the snake
 
 StartGame = frame.add_button("Start", button_Start)
