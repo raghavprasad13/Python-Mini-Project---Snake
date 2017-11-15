@@ -223,6 +223,7 @@ def draw_play_space(canvas):
 	clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
 	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
+		eating_sound_effect.play()
 		fruit.update_pos(random.randint(0,20)*20,random.randint(0,20)*20) #updates the position of the fruit each time the snake eats it
 		snake.addSegment()
 		
@@ -244,7 +245,7 @@ def button_Start():
 		# snake.head.y_pos=random.randint(0, 25)*20
 
 		try:
-			snake_speed = int(inp.get_text())*10
+			snake_speed = int(inp.get_text())*3
 		except ValueError:
 			inp.set_text("NaN")
 			return
