@@ -1,5 +1,6 @@
 import SimpleGUICS2Pygame.simpleguics2pygame as sg 
 import SimpleGUICS2Pygame.simplegui_lib_draw as draw
+import SimpleGUICS2Pygame.simplegui_lib_loader as Loader
 import pygame
 import random
 import time
@@ -72,9 +73,11 @@ class Snake(object):
 			frame.set_draw_handler(game_over)
 			start_button_disabled = False			#Used to disable the Start button but doesn't affect the Restart button
 			restart_button_disabled = False
+			collision_sound_effect.play()
+
 			return
 		'''
-		if(self.head.x_pos==500):         	Incomplete looping back conditions
+		if(self.head.x_pos==500):         	Looping back conditions for the boundary
 			self.head.x_pos=20	
 		if(self.head.x_pos==0):
 			self.head.x_pos=500
@@ -90,6 +93,7 @@ class Snake(object):
 				frame.set_draw_handler(game_over)
 				start_button_disabled = False
 				restart_button_disabled = False
+				collision_sound_effect.play()				
 				return
 
 snake = Snake()
@@ -215,7 +219,6 @@ def draw_play_space(canvas):
 			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Red", "Blue")
 
 		
-		snake.collision()                  # WallCollision calls game_over when the condition is satisfied
 
 	clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
@@ -224,6 +227,9 @@ def draw_play_space(canvas):
 		snake.addSegment()
 		
 		# however, the fruit might appear on the snake. The condition for this will be developed soon. 
+
+
+		snake.collision()                  # WallCollision calls game_over when the condition is satisfied
 
 
 def button_Start():
@@ -275,6 +281,9 @@ def game_over(canvas):						#Temporary GameOver screen
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
 frame.set_keydown_handler(keydown_handler)
+
+eating_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/7/73/Powerup.ogg')    #To be called when snake collides with an apple
+collision_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/3/3b/EnemyDeath.ogg') #To be called when snake collides with walls/itself
 
 inp = frame.add_input("Difficulty from 1-10", input_handler,50)       #Changes the framerate and hence the speed of the snake
 
