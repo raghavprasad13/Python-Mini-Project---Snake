@@ -229,7 +229,7 @@ def draw_play_space(canvas):
 		# however, the fruit might appear on the snake. The condition for this will be developed soon. 
 
 
-		snake.collision()                  # WallCollision calls game_over when the condition is satisfied
+	snake.collision()                  # WallCollision calls game_over when the condition is satisfied
 
 
 def button_Start():
