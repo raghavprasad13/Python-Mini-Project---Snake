@@ -7,11 +7,12 @@
   2. Control using arrow keys  
   3. Custom difficulty setting
   4. Self-collision ends game
+  5. Random appearance of _food_
+  6. Segment is added everytime snake swallows food
+  7. Sound effects added for swallowing of food and collision
   
 #### Features to be added:  
-  1. Random appearance of _food_ (care must be taken to make the food appear at positions which do not coincide with those of any of the snake's segments)  
-  2. Function for adding a segment to the snake is already defined. Must be called every time snake swallows food  
-  3. Increase speed of the game after certain number of times the snake swallows food  
+  1. Increase speed of the game after certain number of times the snake swallows food  
   
   
 #### Optional features:  
