@@ -222,7 +222,9 @@ def draw_play_space(canvas):
 
 	clock.tick(snake_speed)	# this is where the frame rate of the game is being controlled
 
+
 	new_pos=[i for i in range(0,400,20)]
+
 
 	for segment in snake.segments:                    #This ensures that the fruit doesn't appear on the snake
 		if segment.x_pos in new_pos:
@@ -231,6 +233,7 @@ def draw_play_space(canvas):
 			new_pos.remove(segment.y_pos)
 		else:
 			pass
+
 
 	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
 		fruit.update_pos(random.choice(new_pos),random.choice(new_pos)) #updates the position of the fruit each time the snake eats it
@@ -251,7 +254,7 @@ def button_Start():
 		# snake.head.y_pos=random.randint(0, 25)*20
 
 		try:
-			snake_speed = int(inp.get_text())*10
+			snake_speed = int(inp.get_text())*3
 		except ValueError:
 			inp.set_text("NaN")
 			return
