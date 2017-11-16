@@ -264,7 +264,7 @@ def button_Start():
 			inp.set_text("NaN")
 			return
 
-		if (int(inp.get_text()) < 0) or (int(inp.get_text()) > 10):
+		if (int(inp.get_text()) < 1) or (int(inp.get_text()) > 10):
 			inp.set_text("Invalid")
 			return
 
@@ -300,7 +300,7 @@ frame.set_keydown_handler(keydown_handler)
 eating_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/7/73/Powerup.ogg')    #To be called when snake collides with an apple
 collision_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/3/3b/EnemyDeath.ogg') #To be called when snake collides with walls/itself
 
-inp = frame.add_input("Difficulty from 1-10", input_handler,50)       #Changes the framerate and hence the speed of the snake
+inp = frame.add_input("Difficulty from 1-10", input_handler,60)       #Changes the framerate and hence the speed of the snake
 
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
