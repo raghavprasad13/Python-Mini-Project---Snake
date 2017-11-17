@@ -11,7 +11,8 @@ HEIGHT = 500  # height of playing space
 X_VELOCITY = 20 # the x and y velocities must be 20/-20 because of the size of the segments of the snake chosen i.e. 20*20 squares
 Y_VELOCITY = 0
 
-global snake_speed
+global snake_speed,score
+score=0
 
 start_button_disabled = False	# initially we will want start button to be enabled
 restart_button_disabled = True	# initially we will want the restart button to be disabled
@@ -239,6 +240,8 @@ def draw_play_space(canvas):
 	    y_pos = random.randint(0, 24)*20
 
 	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
+	    global score
+	    score=score+10*(int(snake_speed/3))		#Updates score based on snake speed (Each difficulty corresponds to 10 points)
 	    eating_sound_effect.play()    # adds sound 
 	    fruit.update_pos(x_pos,y_pos) #updates the position of the fruit each time the snake eats it
 	    snake.addSegment()
@@ -248,7 +251,8 @@ def draw_play_space(canvas):
 
 
 def button_Start():
-	global start_button_disabled, snake_speed, restart_button_disabled
+	global start_button_disabled, snake_speed, restart_button_disabled,score
+	score=0
 
 	if not start_button_disabled:
 		snake.__init__()                             	# Resets the object snake 
@@ -274,6 +278,8 @@ def button_Start():
 		frame.set_draw_handler(draw_play_space)	
 
 def button_Restart():
+	global score
+	score=0
 	if not restart_button_disabled:
 		snake.__init__()                             	# Uses the difficulty previously given 
 		snake.addSegment()				
@@ -283,16 +289,16 @@ def button_Restart():
 		# snake.head.y_pos=random.randint(0, 25)*20			<-- was causing the teleportation error
 		frame.set_draw_handler(draw_play_space)
 		
-def canvas_Menu(canvas):				#Temporary GameOver screen
+def canvas_Menu(canvas):			#HomeScreen
 	canvas.draw_text('Snake Game', (140, 40), 46, 'Red')
-	canvas.draw_text('Instructions', (40, 140), 36, 'Green')		
-
+	canvas.draw_text('Instructions', (40, 140), 36, 'Green')
+	canvas.draw_text(" Don't run the snake into the wall, or his own tail: you die.",(40,200),19,'Blue') #Instructions
+	canvas.draw_text(" Eat the red apples to gain points.  ",(40,240),19,'Blue')
+	canvas.draw_text(" Your score depends on the Difficulty  ",(40,280),19,'Blue')
 def input_handler(int_input):                         #Function to input difficulty
 	pass
 
-def game_over(canvas):						#Temporary GameOver screen
-	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
-	canvas.draw_text('Score', (140, 140), 26, 'Blue')
+
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
 frame.set_keydown_handler(keydown_handler)
@@ -302,6 +308,12 @@ collision_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-imag
 
 inp = frame.add_input("Difficulty from 1-10", input_handler,60)       #Changes the framerate and hence the speed of the snake
 
+def game_over(canvas):						#Temporary GameOver screen
+	global score
+	
+	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
+	canvas.draw_text('Score :'+str(score), (140, 140), 26, 'Blue')
+	
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
 frame.set_draw_handler(canvas_Menu)		
