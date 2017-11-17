@@ -14,6 +14,9 @@ Y_VELOCITY = 0
 global snake_speed,score
 score=0
 
+displayed = True
+timer_interval = 500
+
 start_button_disabled = False	# initially we will want start button to be enabled
 restart_button_disabled = True	# initially we will want the restart button to be disabled
 								# since "restarting" the game for the first time is illogical
@@ -144,7 +147,6 @@ def keydown_handler(key):
 	if key not in accepted_keys:
 		return
 
-	# lines 89-94: deactivates all other keys except arrow keys
 
 	if activate_updown:
 		if key == sg.KEY_MAP["up"]:
@@ -200,7 +202,8 @@ def draw_play_space(canvas):
 	snake.head.y_pos += snake.head.y_vel
 
 	draw.draw_rect(canvas, [snake.head.x_pos, snake.head.y_pos], [20, 20], 1, "Red", "Green")
-	draw.draw_rect(canvas,[fruit.x_pos,fruit.y_pos],[20,20],1,"Red","Blue")
+	if displayed:
+		draw.draw_rect(canvas,[fruit.x_pos,fruit.y_pos],[20,20],1,"Red","Red")
 	
 	for segment in snake.segments:
 
@@ -298,7 +301,9 @@ def canvas_Menu(canvas):			#HomeScreen
 def input_handler(int_input):                         #Function to input difficulty
 	pass
 
-
+def timer_handler():
+    global displayed
+    displayed = not displayed
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
 frame.set_keydown_handler(keydown_handler)
@@ -318,7 +323,9 @@ StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
 frame.set_draw_handler(canvas_Menu)		
 
+timer = sg.create_timer(timer_interval, timer_handler)
 
+timer.start()
 frame.start()
 
 
