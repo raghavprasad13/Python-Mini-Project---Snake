@@ -18,7 +18,6 @@
   
 #### Optional features:  
   1. Addition of obstacles  
-  2. Keeping score  
-  3. Looping the snake back into the playing space once it reaches the boundary  
+  2. Looping the snake back into the playing space once it reaches the boundary  
   
   **Keep updating the README as and when features are added**
