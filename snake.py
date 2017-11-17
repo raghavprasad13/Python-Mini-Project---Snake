@@ -285,8 +285,10 @@ def button_Restart():
 		
 def canvas_Menu(canvas):				#Temporary GameOver screen
 	canvas.draw_text('Snake Game', (140, 40), 46, 'Red')
-	canvas.draw_text('Instructions', (40, 140), 36, 'Green')		
-
+	canvas.draw_text('Instructions', (40, 140), 36, 'Green')
+	canvas.draw_text(" Don't run the snake into the wall, or his own tail: you die.",(40,200),19,'Blue')
+	canvas.draw_text(" Eat the red apples to gain points.  ",(40,240),19,'Blue')
+	canvas.draw_text(" Your score depends on the difficulty you play on.",(40,280),19,'Blue')
 def input_handler(int_input):                         #Function to input difficulty
 	pass
 
