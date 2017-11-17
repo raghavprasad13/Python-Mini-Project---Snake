@@ -13,6 +13,7 @@
   
 #### Features to be added:  
   1. Increase speed of the game after certain number of times the snake swallows food  
+  2. A button to exit the game (all processes of the game should be shut down and game should be exited)
   
   
 #### Optional features:  
