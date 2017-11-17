@@ -75,6 +75,8 @@ class Snake(object):
 			start_button_disabled = False			#Used to disable the Start button but doesn't affect the Restart button
 			restart_button_disabled = False
 			collision_sound_effect.play()
+			read_highscores()        #Creates scores_list
+			CheckHighscore(score)    #Compares score with scores_list
 
 			return
 		'''
@@ -95,6 +97,8 @@ class Snake(object):
 				start_button_disabled = False
 				restart_button_disabled = False
 				collision_sound_effect.play()				
+				read_highscores()			#Creates scores_list
+				CheckHighscore(score)		#Compares score with scores_list
 				return
 
 snake = Snake()
@@ -298,7 +302,36 @@ def canvas_Menu(canvas):			#HomeScreen
 def input_handler(int_input):                         #Function to input difficulty
 	pass
 
+def button_HighScoreScreen():		#Highscore screen
+	read_highscores()
+	frame.set_draw_handler(canvas_HighScoreScreen)
+	
+def read_highscores():   #Reads the highscore file
+	global scores_list        #Stores the previous highscores
+	scores_list=[]
+	highscore_text=open("Highscores.txt","r")
+	with highscore_text as file:
+	    scores_list = [line.strip() for line in file]  #Reads the first 10 lines
 
+def canvas_HighScoreScreen(canvas):                #Prints Highscore.txt
+	global scores_list
+	i=1
+	j=80
+	canvas.draw_text("ScoreBoard",(40,40),29,'Red')
+	for elements in scores_list:             #Prints the scores
+		canvas.draw_text(str(i)+")   "+str(elements),(40,j),19,'Green')
+		i=i+1
+		j=j+40
+def CheckHighscore(score):
+	global scores_list
+	highscore_text=open("Highscores.txt","w+")
+	for element in scores_list:
+		if int(score)>int(element):                 # Checks if final score is greater than current highscores
+			                 		                    
+			highscore_text.write(str(score)+'\n')		#Shift's each element down by one
+			score=element		                        #if the User's score is greater than the previous high scores
+		else:
+			highscore_text.write(str(element)+'\n')
 
 frame = sg.create_frame("Snake", LENGTH, HEIGHT)
 frame.set_keydown_handler(keydown_handler)
@@ -308,17 +341,19 @@ collision_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-imag
 
 inp = frame.add_input("Difficulty from 1-10", input_handler,60)       #Changes the framerate and hence the speed of the snake
 
-def game_over(canvas):						#Temporary GameOver screen
+def game_over(canvas):						#GameOver screen
 	global score
 	
 	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
-	canvas.draw_text('Score :'+str(score), (140, 140), 26, 'Blue')
+	canvas.draw_text('Score :'+str(score), (140, 140), 26, 'Blue')	
+	
 	
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
-frame.set_draw_handler(canvas_Menu)		
-
-
+frame.set_draw_handler(canvas_Menu)
+read_highscores()        #Initially reads the highscore file
+HighScore = frame.add_button("Highscores",button_HighScoreScreen)
+	
 frame.start()
 
 
