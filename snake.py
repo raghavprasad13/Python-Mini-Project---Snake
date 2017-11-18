@@ -4,6 +4,7 @@ import SimpleGUICS2Pygame.simplegui_lib_loader as Loader
 import pygame
 import random
 import time
+import sys
 
 LENGTH = 500  # length of playing space
 HEIGHT = 500  # height of playing space
@@ -356,7 +357,9 @@ def game_over(canvas):						#GameOver screen
 	
 	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
 	canvas.draw_text('Score :'+str(score), (140, 140), 26, 'Blue')	
-	
+def button_quit():
+	timer.stop()			#Ends the timer thread(Was causing the exit issue)
+	exit()					#Exits from the script
 	
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
@@ -364,8 +367,8 @@ RestartGame = frame.add_button("Restart", button_Restart)
 frame.set_draw_handler(canvas_Menu)
 read_highscores()        #Initially reads the highscore file
 HighScore = frame.add_button("Highscores",button_HighScoreScreen)
-	
-=======
+Quit = frame.add_button("Quit",button_quit)
+
 frame.set_draw_handler(canvas_Menu)		
 
 timer = sg.create_timer(timer_interval, timer_handler)
