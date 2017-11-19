@@ -84,14 +84,15 @@ class Snake(object):
 				CheckHighscore(score)    #Compares score with scores_list
 	
 				return
-		else:
-			if(self.head.x_pos==500):         	#Looping back conditions for the boundary
-				self.head.x_pos=20	
-			if(self.head.x_pos==0):
+		else:		#Looping back conditions for the boundary
+
+			if(self.head.x_pos==500):		# Issue here
+				self.head.x_pos=0
+			if(self.head.x_pos==-20):
 				self.head.x_pos=500
-			if(self.head.y_pos==500):
-				self.head.y_pos=20	
-			if(self.head.y_pos==0):
+			if(self.head.y_pos==500):		# Issue here
+				self.head.y_pos=0	
+			if(self.head.y_pos==-20):
 				self.head.y_pos=500													
 		
 
@@ -294,8 +295,6 @@ def button_Restart():
 		snake.addSegment()				
 		snake.addSegment()
 		snake.addSegment()
-		# snake.head.x_pos=random.randint(0, 25)*20			<-- was causing the teleportation error
-		# snake.head.y_pos=random.randint(0, 25)*20			<-- was causing the teleportation error
 		frame.set_draw_handler(draw_play_space)
 		
 def canvas_Menu(canvas):			#HomeScreen
@@ -304,6 +303,7 @@ def canvas_Menu(canvas):			#HomeScreen
 	canvas.draw_text(" Don't run the snake into the wall, or his own tail: you die.",(40,200),19,'Blue') #Instructions
 	canvas.draw_text(" Eat the red apples to gain points.  ",(40,240),19,'Blue')
 	canvas.draw_text(" Your score depends on the Difficulty  ",(40,280),19,'Blue')
+
 def input_handler(int_input):                         #Function to input difficulty
 	pass
 
@@ -311,6 +311,7 @@ def input_handler(int_input):                         #Function to input difficu
 def button_HighScoreScreen():		#Highscore screen
 	read_highscores()
 	frame.set_draw_handler(canvas_HighScoreScreen)
+
 	
 def read_highscores():   #Reads the highscore file
 	global scores_list        #Stores the previous highscores
@@ -318,6 +319,7 @@ def read_highscores():   #Reads the highscore file
 	highscore_text=open("Highscores.txt","r")
 	with highscore_text as file:
 	    scores_list = [line.strip() for line in file]  #Reads the first 10 lines
+
 
 def canvas_HighScoreScreen(canvas):                #Prints Highscore.txt
 	global scores_list
@@ -328,6 +330,8 @@ def canvas_HighScoreScreen(canvas):                #Prints Highscore.txt
 		canvas.draw_text(str(i)+")   "+str(elements),(40,j),19,'Green')
 		i=i+1
 		j=j+40
+
+
 def CheckHighscore(score):
 	global scores_list
 	highscore_text=open("Highscores.txt","w+")
@@ -358,9 +362,13 @@ def game_over(canvas):						#GameOver screen
 	
 	canvas.draw_text('Game Over', (140, 40), 46, 'Red')
 	canvas.draw_text('Score :'+str(score), (140, 140), 26, 'Blue')	
+
+
 def button_quit():
 	timer.stop()			#Ends the timer thread(Was causing the exit issue)
 	exit()					#Exits from the script
+
+
 def button_walls():
 	global wall_check
 	if(Walls_State.get_text()=="Walls: Enabled"):
@@ -369,6 +377,14 @@ def button_walls():
 	else:
 		Walls_State.set_text("Walls: Enabled")
 		wall_check=0
+
+
+def button_reset_highscores():
+	global scores_list
+	scores_list = ['0' for i in range(len(scores_list))]
+	CheckHighscore('0')
+
+
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
 
@@ -380,7 +396,11 @@ wall_check=0
 Walls_State = frame.add_button("Walls: Enabled", button_walls)      
 HighScore = frame.add_button("Highscores",button_HighScoreScreen)
 
+reset_highscores = frame.add_button("Reset highscores", button_reset_highscores)
+
+
 Quit = frame.add_button("Quit",button_quit)
+
 
 frame.set_draw_handler(canvas_Menu)		
 
