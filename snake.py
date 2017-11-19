@@ -375,9 +375,9 @@ RestartGame = frame.add_button("Restart", button_Restart)
 frame.set_draw_handler(canvas_Menu)
 read_highscores()        #Initially reads the highscore file
 
-global wall_check
+global wall_check					#Walls enabled initially
 wall_check=0
-Walls_State = frame.add_button("Walls: Enabled", button_walls)      #Walls enabled initially
+Walls_State = frame.add_button("Walls: Enabled", button_walls)      
 HighScore = frame.add_button("Highscores",button_HighScoreScreen)
 
 Quit = frame.add_button("Quit",button_quit)
