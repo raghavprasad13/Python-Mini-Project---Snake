@@ -72,27 +72,28 @@ class Snake(object):
 		self.tail.y_vel = self.tail.ahead.y_vel 	# to that of the segment directly in front of it
 	
 	def collision(self):
-		global start_button_disabled
-		if(self.head.x_pos==-20 or self.head.y_pos==500 or self.head.x_pos==500 or self.head.y_pos==-20):
-			time.sleep(0.2)
-			frame.set_draw_handler(game_over)
-			start_button_disabled = False			#Used to disable the Start button but doesn't affect the Restart button
-			restart_button_disabled = False
-			collision_sound_effect.play()
-			read_highscores()        #Creates scores_list
-			CheckHighscore(score)    #Compares score with scores_list
-
-			return
-		'''
-		if(self.head.x_pos==500):         	Looping back conditions for the boundary
-			self.head.x_pos=20	
-		if(self.head.x_pos==0):
-			self.head.x_pos=500
-		if(self.head.y_pos==500):
-			self.head.y_pos=20	
-		if(self.head.y_pos==0):
-			self.head.y_pos=500													
-		'''
+		global start_button_disabled,wall_check
+		if(wall_check==0):
+			if(self.head.x_pos==-20 or self.head.y_pos==500 or self.head.x_pos==500 or self.head.y_pos==-20):
+				time.sleep(0.2)
+				frame.set_draw_handler(game_over)
+				start_button_disabled = False			#Used to disable the Start button but doesn't affect the Restart button
+				restart_button_disabled = False
+				collision_sound_effect.play()
+				read_highscores()        #Creates scores_list
+				CheckHighscore(score)    #Compares score with scores_list
+	
+				return
+		else:
+			if(self.head.x_pos==500):         	#Looping back conditions for the boundary
+				self.head.x_pos=20	
+			if(self.head.x_pos==0):
+				self.head.x_pos=500
+			if(self.head.y_pos==500):
+				self.head.y_pos=20	
+			if(self.head.y_pos==0):
+				self.head.y_pos=500													
+		
 
 		# condition to check for self collision
 		for segment in self.segments:
@@ -360,13 +361,25 @@ def game_over(canvas):						#GameOver screen
 def button_quit():
 	timer.stop()			#Ends the timer thread(Was causing the exit issue)
 	exit()					#Exits from the script
-	
+def button_walls():
+	global wall_check
+	if(Walls_State.get_text()=="Walls: Enabled"):
+		Walls_State.set_text("Walls: Disabled")
+		wall_check=1                          #Wall_Check is used in collision() to either eneable/disable snake-wall collision
+	else:
+		Walls_State.set_text("Walls: Enabled")
+		wall_check=0
 StartGame = frame.add_button("Start", button_Start)
 RestartGame = frame.add_button("Restart", button_Restart)
 
 frame.set_draw_handler(canvas_Menu)
 read_highscores()        #Initially reads the highscore file
+
+global wall_check
+wall_check=0
+Walls_State = frame.add_button("Walls: Enabled", button_walls)      #Walls enabled initially
 HighScore = frame.add_button("Highscores",button_HighScoreScreen)
+
 Quit = frame.add_button("Quit",button_quit)
 
 frame.set_draw_handler(canvas_Menu)		
