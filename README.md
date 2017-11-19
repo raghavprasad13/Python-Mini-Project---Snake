@@ -10,14 +10,16 @@
   5. Random appearance of _food_
   6. Segment is added everytime snake swallows food
   7. Sound effects added for swallowing of food and collision
+  8. Highscores Board updates itself
+  9. Quit button ends all threads  
+  10. Walls can be disabled  
+
+
   
 #### Features to be added:  
-  1. Increase speed of the game after certain number of times the snake swallows food  
-  2. A button to exit the game (all processes of the game should be shut down and game should be exited)
+  1. Increase speed of the game after certain number of times the snake swallows food   
   
   
 #### Optional features:  
   1. Addition of obstacles  
-  2. Looping the snake back into the playing space once it reaches the boundary  
-  
   **Keep updating the README as and when features are added**
