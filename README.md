@@ -12,7 +12,8 @@
   7. Sound effects added for swallowing of food and collision
   8. Highscores Board updates itself
   9. Quit button ends all threads  
-  10. Walls can be disabled  
+ 10. Walls can be disabled  
+ 11. Button to reset highscores
 
 
   
@@ -22,4 +23,5 @@
   
 #### Optional features:  
   1. Addition of obstacles  
+  
   **Keep updating the README as and when features are added**
