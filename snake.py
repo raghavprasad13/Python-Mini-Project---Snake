@@ -365,7 +365,7 @@ frame.set_draw_handler(canvas_Menu)
 read_highscores()        #Initially reads the highscore file
 HighScore = frame.add_button("Highscores",button_HighScoreScreen)
 	
-=======
+
 frame.set_draw_handler(canvas_Menu)		
 
 timer = sg.create_timer(timer_interval, timer_handler)
