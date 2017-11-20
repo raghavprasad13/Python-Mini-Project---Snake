@@ -195,13 +195,14 @@ def draw_play_space(canvas):
 
 	global snake
 	global snake_speed
-
+	canvas.draw_image(image, (500 / 2, 500 / 2), (500, 500), (250,250), (500, 500))
+	'''
 	for i in range(25):		# merely draws the red grid. Temporary and for visual ref of dev only. 
 							#Not to be included in finalized project
 
 		canvas.draw_line((((i+1)*LENGTH)/25, 0), (((i+1)*LENGTH)/25, HEIGHT), 1, "Red")
 		canvas.draw_line((0, ((i+1)*HEIGHT)/25), (LENGTH, ((i+1)*HEIGHT)/25), 1, "Red")
-
+	'''
 	snake.head.prev_x_pos = snake.head.x_pos
 	snake.head.prev_y_pos = snake.head.y_pos
 
@@ -298,12 +299,15 @@ def button_Restart():
 		frame.set_draw_handler(draw_play_space)
 		
 def canvas_Menu(canvas):			#HomeScreen
+	
+
 	canvas.draw_text('Snake Game', (140, 40), 46, 'Red')
 	canvas.draw_text('Instructions', (40, 140), 36, 'Green')
 	canvas.draw_text(" Don't run the snake into the wall, or his own tail: you die.",(40,200),19,'Blue') #Instructions
 	canvas.draw_text(" Eat the red apples to gain points.  ",(40,240),19,'Blue')
 	canvas.draw_text(" Your score depends on the Difficulty  ",(40,280),19,'Blue')
 
+image = sg.load_image('https://image.ibb.co/g9rRoR/background2.png')
 def input_handler(int_input):                         #Function to input difficulty
 	pass
 
@@ -409,9 +413,3 @@ timer = sg.create_timer(timer_interval, timer_handler)
 timer.start()
 
 frame.start()
-
-
-
-
-
-
