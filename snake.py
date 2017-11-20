@@ -209,7 +209,7 @@ def draw_play_space(canvas):
 	snake.head.x_pos += snake.head.x_vel
 	snake.head.y_pos += snake.head.y_vel
 
-	draw.draw_rect(canvas, [snake.head.x_pos, snake.head.y_pos], [20, 20], 1, "Red", "Green")
+	draw.draw_rect(canvas, [snake.head.x_pos, snake.head.y_pos], [20, 20], 1, "Green", "Green")
 	if displayed:
 		draw.draw_rect(canvas,[fruit.x_pos,fruit.y_pos],[20,20],1,"Red","Red")
 	
@@ -219,7 +219,7 @@ def draw_play_space(canvas):
 			segment.x_pos = segment.ahead.prev_x_pos
 			segment.y_pos = segment.ahead.prev_y_pos
 
-			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Red", "Yellow")
+			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Yellow", "Yellow")
 
 		else:
 			segment.prev_x_pos = segment.x_pos
@@ -228,7 +228,7 @@ def draw_play_space(canvas):
 			segment.x_pos = segment.ahead.prev_x_pos
 			segment.y_pos = segment.ahead.prev_y_pos
 
-			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Red", "Blue")
+			draw.draw_rect(canvas, [segment.x_pos, segment.y_pos], [20, 20], 1, "Blue", "Blue")
 
 		
 
@@ -253,8 +253,10 @@ def draw_play_space(canvas):
 	if fruit.x_pos==snake.head.x_pos and fruit.y_pos==snake.head.y_pos:
 	    global score
 	    score=score+10*(int(snake_speed/3))		#Updates score based on snake speed (Each difficulty corresponds to 10 points)
+	    score_display.set_text("Score: "+str(score))
 	    eating_sound_effect.play()    # adds sound 
 	    fruit.update_pos(x_pos,y_pos) #updates the position of the fruit each time the snake eats it
+	    snake_speed += 0.2
 	    snake.addSegment()
 
 			
@@ -267,9 +269,12 @@ def button_Start():
 
 	if not start_button_disabled:
 		snake.__init__()                             	# Resets the object snake 
-		snake.addSegment()				# Starts off with the initial conditions
-		snake.addSegment()
-		snake.addSegment()
+
+		for i in range(3):			# Starts off with the initial conditions
+			snake.addSegment()
+
+		score_display.set_text("Score: "+str(score))				
+		
 		# snake.head.x_pos=random.randint(0, 25)*20
 		# snake.head.y_pos=random.randint(0, 25)*20
 
@@ -293,9 +298,13 @@ def button_Restart():
 	score=0
 	if not restart_button_disabled:
 		snake.__init__()                             	# Uses the difficulty previously given 
-		snake.addSegment()				
-		snake.addSegment()
-		snake.addSegment()
+		for i in range(3):
+			snake.addSegment()
+
+		snake_speed = int(inp.get_text())*3
+
+		score_display.set_text("Score: "+str(score))
+
 		frame.set_draw_handler(draw_play_space)
 		
 def canvas_Menu(canvas):			#HomeScreen
@@ -360,6 +369,7 @@ eating_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/
 collision_sound_effect = sg.load_sound('http://rpg.hamsterrepublic.com/wiki-images/3/3b/EnemyDeath.ogg') #To be called when snake collides with walls/itself
 
 inp = frame.add_input("Difficulty from 1-10", input_handler,60)       #Changes the framerate and hence the speed of the snake
+empty_label = frame.add_label('')
 
 def game_over(canvas):						#GameOver screen
 	global score
@@ -390,7 +400,9 @@ def button_reset_highscores():
 
 
 StartGame = frame.add_button("Start", button_Start)
+empty_label = frame.add_label('')
 RestartGame = frame.add_button("Restart", button_Restart)
+empty_label = frame.add_label('')
 
 frame.set_draw_handler(canvas_Menu)
 read_highscores()        #Initially reads the highscore file
@@ -398,12 +410,18 @@ read_highscores()        #Initially reads the highscore file
 global wall_check
 wall_check=0
 Walls_State = frame.add_button("Walls: Enabled", button_walls)      #Walls enabled initially
+empty_label = frame.add_label('')
 HighScore = frame.add_button("Highscores",button_HighScoreScreen)
+empty_label = frame.add_label('')
 
 reset_highscores = frame.add_button("Reset highscores", button_reset_highscores)
+empty_label = frame.add_label('')
 
 
 Quit = frame.add_button("Quit",button_quit)
+empty_label = frame.add_label('')
+
+score_display = frame.add_label("Score: -")
 
 
 frame.set_draw_handler(canvas_Menu)		
