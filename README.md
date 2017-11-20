@@ -14,11 +14,7 @@
   9. Quit button ends all threads  
  10. Walls can be disabled  
  11. Button to reset highscores
-
-
-  
-#### Features to be added:  
-  1. Increase speed of the game after certain number of times the snake swallows food   
+ 12. Snake speeds up gradually as game progresses
   
   
 #### Optional features:  
